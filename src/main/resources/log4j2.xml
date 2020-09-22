@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <properties>
+        <!--%d{pattern}表示按照pattern输出日期，%t表示输出线程名称，%-5中(-)号表示左对齐，5表示占五个字符长度-->
+        <!--%logger表示获取提交logger的类名，{36}表示对于类所在包的层级精度，如(com.cyclone.User)，若指定{2}则输出(cyclone.User)-->
+        <!--%m表示具体的日志信息，%n为换行符-->
+        <property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] [%t] [%l] : %m%n</property>
+        <!--设置默认日志级别-->
+        <property name="LOG_LEVEL">info</property>
+        <!--基本日志文件-->
+        <property name="LOG_FILE">logs/statistical.log</property>
+    </properties>
+
+    <Appenders>
+        <!--控制台日志，可以指定target为 "SYSTEM_OUT" or "SYSTEM_ERR"-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--通过${}引用property中定义的pattern-->
+            <PatternLayout pattern="${PATTERN}"/>
+        </Console>
+
+        <!--每天生成一个.log文件，fileName指定基本的日志文件名，filePattern指定滚动生成的文件名-->
+        <!--%d表示时间滚动，以打印日志当时时间为准-->
+        <!--%i表示根据文件大小滚动，%i最小值默认为0，最大值默认为7，文件格式为 mylog-1.log,mylog-2.log-->
+        <RollingRandomAccessFile name="LocalLogFile"
+                                 fileName="${LOG_FILE}"
+                                 filePattern="logs/agent-%d{yyyy-MM-dd}.log">
+            <!--日志格式-->
+            <PatternLayout pattern="${PATTERN}"/>
+            <!--日志滚动策略-->
+            <Policies>
+                <!--按照时间滚动，interval是间隔单位，标识上述filePattern中指定的SimpleDateFormat最后一个时间单位的间隔-->
+                <!--例如：filePattern=%d{yyyy-MM-dd-HH}，interval=1 表示每隔一个小时生成一个日志文件-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            <!-- max是累加器的最大值，即filePattern中根据文件大小进行切割的文件，即%i支持的最大值，当%i超过这个值，会删除最早的文件进行迭代
+            仅保证日志文件后缀%i不超过max值-->
+            <DefaultRolloverStrategy>
+                <!--这是指定在“滚动时”删除那些文件，即如果没有触发日志滚动，不会触发删除策略-->
+                <!--指定删除策略，basePath表示扫描的文件夹，maxDepth表示扫描的层级，1表示扫描当前文件夹不扫描子文件夹-->
+                <Delete basePath="logs/" maxDepth="1">
+                    <!--当Delete标签中的所有以'If'开头的标签中条件都为true时才会触发删除策略-->
+                    <!--匹配日志文件名才删除-->
+                    <IfFileName glob="agent-*.log"/>
+                    <!--如果日志文件存活时间超过age表达式才删除-->
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="${LOG_LEVEL}" includeLocation="true">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="LocalLogFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
