@@ -7,3 +7,4 @@
         需要有一个 statistical_config.json 配置文件，见示例(example)，配置文件字段含义见 StatisticalConfig 类中注释，统计结果表格生成在此文件的同级目录，命名为(时间戳.xlsx)。
 ### 2.2 启动
         IDEA编译启动，Maven打包启动，启动时需要加入参数 java -jar D:\xxxstatistical_config.json(配置文件所在路径)。
+        使用 IDEA 直接运行需要在 Pragram arguments 处填入配置文件路径: D:\Sdd_Projects\StatisticalLogByRegex\src\statistical_config.json

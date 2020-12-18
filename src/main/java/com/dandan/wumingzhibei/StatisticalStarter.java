@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 public class StatisticalStarter {
     private static final Logger logger = LogManager.getLogger(StatisticalStarter.class);
 
-    // 配置文件名要求
-    private static final String CONFIG_FILE_NAME = "statistical_config.json";
     // xlsx文件后缀
     private static final String XLSX_SUFFIX = ".xlsx";
     // 读取文件编码
@@ -92,7 +90,7 @@ public class StatisticalStarter {
         // 导出文件
         FileOutputStream fos = null;
         try {
-            String exportFilePath = configPath.replace(CONFIG_FILE_NAME, System.currentTimeMillis() + XLSX_SUFFIX);
+            String exportFilePath = statisticalConfig.getFileAbsolutePath() + System.currentTimeMillis() + XLSX_SUFFIX;
             fos = new FileOutputStream(exportFilePath);
             xssfWorkbook.write(fos);
             logger.info("Export success, file:{}.", exportFilePath);

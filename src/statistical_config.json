@@ -1,0 +1,1 @@
+{	"fileAbsolutePath": "D:\\Sdd_Projects\\StatisticalLogByRegex\\src\\agent.log",	"containStr": "End read new lines",	"regexStr": "(?<=timeCost:).*(?=ms,)|(?<=readSize:).*(?=KB.)",	"columnCount": 2}
